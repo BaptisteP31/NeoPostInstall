@@ -9,30 +9,33 @@ fi
 if whiptail --title "PostInstall" --yesno "Bienvenue dans le script d'installation PostInstall, ce script installera les paquets nécessaires à l'utilsation de votre distribution linux." 8 78 --yes-button "Continuer" --no-button "Quitter";
 then
 
-    sudo apt update -y && sudo apt upgrade -y
+    sudo apt update -y # && sudo apt upgrade -y
 
-    SELECTED=$(whiptail --title "Sélection des paquets à installer" --checklist "Sélectionnez les paquest à installer (il est conseillé d'installer ceux qui sont déjà sélectionnés)" 20 75 10 \
-    openssh-client "Pour se connecter via SSH" ON \
-    openssh-server "Pour autoriser les connections ssh" OFF \
+    if whiptail --title "Mise à jour du système" --yesno "Souhaitez vous mettre à jour votre système ? (recommandé)" 8 78 --yes-button "Oui" --no-button "Non";
+    then
+        sudo apt upgrade -y
+    fi
+
+    SELECTED=$(whiptail --title "Sélection des paquets à installer" --checklist "Sélectionnez les paquest à installer (il est recommandé d'installer ceux qui sont déjà sélectionnés)" 20 75 10 \
+    git "Utilisé pour le contrôle de version" ON \
+    g++ "Compilateur C++" ON \
+    gcc "Compilateur C" ON \
+    make "Utilisé pour la compilation par makefile" ON \
+    cmake "Utilisé pour la compilation par cmake" OFF \
+    build-essentials "Essentiels pour la compilation" ON \
+    python3 "Pour le développement en python" ON \
+    sagemath "Pour le développement en sagemath" OFF \
     php "Pour le développement en php" ON \
     php-curl "Complément pour php" ON \
     php-mbstring "Complément pour php" ON \
-    apache2 "Pour l'hébergement web" ON \
-    mariadb-client "Pour la création de base données" ON \
-    mariadb-server "Pour la création de base données" ON \
-    phpmyadmin "Pour la gestion de base données" ON \
-    python3 "Pour le développement en python" ON \
-    curl "Utilisé pour le téléchargement à disance" ON \
-    wget "Utilisé pour le téléchargement de fichiers" ON \
+    openssh-client "Pour se connecter via SSH" ON \
+    curl "Utilisé pour les requêtes HTTP" ON \
+    libcurl4-gnutls-dev "Librairie pour curl" ON \
+    libcurses-ocaml-dev "Librairie pour curses" ON \
+    wget "Utilisé pour les requêtes HTTP" ON \
     net-tools "Set d'utilitaires réseau" ON \
-    git "Utilisé pour le contrôle de version" ON \
-    gcc "Compilateur C" ON \
-    g++ "Compilateur C++" ON \
-    make "Constructeur de fichiers" ON \
-    build-essentials "Essentiels pour la compilation" ON \
-    vim "Meilleur éditeur de text" ON \
+    vim "Meilleur éditeur de texte" ON \
     htop "top, en mieux" ON 3>&1 1>&2 2>&3) #Redirection de la sortie
-
 
     SELECTED=$(echo $SELECTED | sed 's/"//g') #Retire les "" par substitution
 
@@ -49,6 +52,8 @@ then
         SELECTED_OPT=$(whiptail --title "Paquets supplémentaire" --checklist "Les paquets ci-dessous sont nons essentiels et de ce fait ne doivent être installé que si vous avez \"l'utilité\"" 20 65 10 \
         neofetch "Pour montrer à tout le monde votre distro" OFF \
         cowsay "Fait parler une vache, pourquoi pas ?" OFF \
+        hollywood "Fait de votre terminal un écran de cinéma" OFF \
+        cmatrix "Fait de votre terminal un écran de cinéma" OFF \
         figlet "Fait de jolis textes en ASCII Art" OFF  3>&1 1>&2 2>&3) #Redirection de la sortie
 
         SELECTED_OPT=$(echo $SELECTED_OPT | sed 's/"//g') #Retire les "" par substitution
